@@ -7,8 +7,10 @@
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script>
 $(document).on("pagecreate","#pageone",function(){
-  $("p").on("tap",function(){
-    $(this).hide();
+  $("p").on("swipe",function(){
+  	var $span = $("span");
+    $span.text("Swipe detected!");
+    window.setTimeout(function(){ $span.remove(); },1000);
   });
 });
 </script>
@@ -17,13 +19,13 @@ $(document).on("pagecreate","#pageone",function(){
 
 <div data-role="page" id="pageone">
   <div data-role="header">
-    <h1>The tap Event</h1>
+    <h1>The swipe Event</h1>
   </div>
 
   <div data-role="main" class="ui-content">
-    <p>If you tap me, I will disappear.</p>
-    <p>Tap me away!</p>
-    <p>Tap me too!</p>
+    <p>Swipe this text or in the box below.</p>
+    <p style="border:1px solid black;height:200px;width:200px;"></p>
+    <p><span style="color:red"></span></p>
   </div>
 
   <div data-role="footer">
