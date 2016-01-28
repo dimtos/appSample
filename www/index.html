@@ -10,7 +10,7 @@ $(document).on("pagecreate","#pageone",function(){
   $("p").on("swipe",function(){
   	var $span = $("span");
     $span.text("Swipe detected!");
-    window.setTimeout(function(){ $span.remove(); },1000);
+    window.setTimeout(function(){ $span.html(''); },1500);
   });
 });
 </script>
