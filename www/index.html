@@ -50,9 +50,8 @@
         </script>
 -->
 		<script type="text/javascript">
-			$('button').vclick(function()
-			{
-				$(this).after("<span style='color:#108040;'> vclick fired... </span>");
+			$( document ).on( "vclick", "p", function() {
+				$( this ).append( "<span style='color:#108040;'> vclick fired... </span>" );
 			});
 		</script>
     </body>
