@@ -49,9 +49,9 @@
         </script>
 -->
 		<script type="text/javascript">
-			$( document ).on( "vclick", "p", function() {
-				$( this ).append( "<span style='color:#108040;'> vclick fired... </span>" );
-			});
+			jQuery( window ).on( "swipe", function( event ) {
+				jQuery(document).html('swiped');
+			} )
 		</script>
     </body>
 </html>
