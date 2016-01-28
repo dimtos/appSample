@@ -5,16 +5,25 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).on("pagecreate","#pageone",function(){
+  $("p").on("tap",function(){
+    $(this).hide();
+  });
+});
+</script>
 </head>
 <body>
 
-<div data-role="page">
+<div data-role="page" id="pageone">
   <div data-role="header">
-    <h1>Welcome To My Homepage</h1>
+    <h1>The tap Event</h1>
   </div>
 
   <div data-role="main" class="ui-content">
-    <p>I Am Now A Mobile Developer!!</p>
+    <p>If you tap me, I will disappear.</p>
+    <p>Tap me away!</p>
+    <p>Tap me too!</p>
   </div>
 
   <div data-role="footer">
