@@ -9,8 +9,34 @@
 	<script src="js/my.js"></script>
 	<script>
 
+		// настройки
+		var settings =
+		{
+			zp: 51500,
+			workdayStart: 10,
+			workdayFinish: 19,
+			workdaysInMonth: 0
+		};
+
+		// месяцы для читабельного вида
 		var months = [ 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря' ];
 
+		// кол-во полных рабочих дней до сегодняшнего
+		for ( var i = 1; i < 31; i++ )
+		{
+			var now = new Date();
+			var date = new Date( now.getFullYear(), now.getMonth(), i );
+			if ( now.getMonth() == date.getMonth() )
+			{
+				var isHoliday = ( date.getDay() == 0 || date.getDay() == 6 );
+				if( !isHoliday ){ settings.workdaysInMonth++; }
+			}
+		}
+
+		// зп в миллисекунду
+		var zpPerSec = settings.zp / settings.workdaysInMonth / ( settings.workdayFinish - settings.workdayStart - 1 ) / 60 / 60 / 1000;
+
+		// дата и время в читабельном виде
 		function nowAsString()
 		{
 			var now = new Date();
@@ -26,13 +52,6 @@
 			var time = timeArr.join(':');
 			return date + ' года ' + time;
 		}
-
-		var settings =
-		{
-			zp: 51500,
-			workdayStart: 10,
-			workdayFinish: 19
-		};
 
 		$(document).on('pagecreate',function(event)
 		{
@@ -53,25 +72,37 @@
 			}
 			var justNow = now.getTime();
 
-			// начало рабочего дня в виде смещения в миллисекундах от 01.01.1970
-			var now2 = new Date( 2016, 0, 30, settings.workdayStart, 0, 0 );
+			var zp = new Object();
+			zp.month = sprintf( '%.2f', zpPerSec * 1000 * 60 * 60 * 8 * settings.workdaysInMonth );
+			zp.today = 0;
+
+			if
+			(
+					now.getDay() == 0 || now.getDay() == 6
+				||
+					now.getHours() < settings.workdayStart
+			)
+			{
+				return zp;
+			}
+
+			// начало рабочего дня в виде смещения в миллисекундах от 01.01.1970 00:00:00 GMT
+			var now2 = new Date( now.getFullYear(), now.getMonth(), now.getDate(), settings.workdayStart, 0, 0 );
 			var workdayStart = now2.getTime();
 
-			// зп в секунду
-			var zpInSec = settings.zp / 20 / ( settings.workdayFinish - settings.workdayStart + 1 ) / 60 / 60 / 1000;
+			// зп за сегодня
+			zp.today = sprintf( '%.2f', zpPerSec * ( justNow - workdayStart ) );
 
-			var zpToday = sprintf( '%.2f', zpInSec * ( justNow - workdayStart ) );
-
-//			if( now.getDay() == 6 || now.getDay() == 7 ){ zpToday = 0; }
-
-			return zpToday;
+			return zp;
 		}
 
 		setInterval(function(){
 			// выводим актуальное время
 			$('#now').html( nowAsString() );
 			// выводим зп
-			$('#zp-today').html( countZP() );
+			var zp = countZP();
+			$('#zp-today').html( zp.today );
+			$('#zp-month').html( zp.month );
 		},100);
 
 	</script>
@@ -94,7 +125,7 @@
 			<b><span id="zp-today"></span></b> рублей
 		</p>
 		<p>
-			Разбогател за текущий месяц на
+			Разбогател за этот месяц на
 			<b><span id="zp-month"></span></b> рублей
 		</p>
 	</div>
